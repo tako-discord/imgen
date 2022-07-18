@@ -3,9 +3,11 @@ from io import BytesIO
 from typing import Tuple
 from PIL import Image, ImageOps
 
-def get_image(url: str, size: Tuple[int, int]=(512, 512)):
+def get_image(url: str, size: Tuple[int, int]=(512, 512), conversion: bool = True):
     buffer = BytesIO(requests.get(url).content)
-    return Image.open(buffer).convert("RGBA").resize(size)
+    if conversion:
+        return Image.open(buffer).convert("RGBA").resize(size)
+    return Image.open(buffer)
 
 def mask(img: Image, mask: str):
     mask = Image.open('assets/masks/' + mask + ".png").convert('L')
