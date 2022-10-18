@@ -1,22 +1,27 @@
+from PIL import Image
 from io import BytesIO
-from utils import get_image, mask
-from PIL import Image, ImageSequence
-from flask import Flask, Response, request, send_file
+from flask import Flask, request, send_file
+from utils import get_image, mask, valid_avatar_url
 
 
 app = Flask(__name__)
+invalid_url = {"message": "The avatar must start with https://cdn.discordapp.com/avatars/"}, 400
 
 @app.route("/")
 def index():
     return {"message": "Please use a valid endpoint"}, 400
 
 
+@app.route("/uptime")
+def uptime():
+    return {"message": "IMGEN is up & running!"}, 200
+
 @app.route("/jail")
 def jail():
     avatar = request.args.get("avatar")
 
-    if avatar.startswith("https://cdn.discordapp.com/avatars/") == False:
-        return {"message": "The avatar must start with https://cdn.discordapp.com/avatars/"}, 400
+    if valid_avatar_url(avatar):
+        return invalid_url
 
     avatar = get_image(avatar).convert("L")
     jail = Image.open("assets/jail/bars.png")
@@ -34,8 +39,8 @@ def pride():
     type = request.args.get("type", "lgbtq")
     avatar = request.args.get("avatar")
 
-    if avatar.startswith("https://cdn.discordapp.com/avatars/") == False:
-        return {"message": "The avatar must start with https://cdn.discordapp.com/avatars/"}, 400
+    if valid_avatar_url(avatar):
+        return invalid_url
     bg = Image.open("assets/pride/" + type + ".png").convert("RGBA")
     avatar = get_image(avatar, (400, 400))
 

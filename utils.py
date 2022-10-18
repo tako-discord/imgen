@@ -14,3 +14,7 @@ def mask(img: Image, mask: str):
     output = ImageOps.fit(img, mask.size)
     output.putalpha(mask)
     return output.convert("RGBA")
+
+def valid_avatar_url(url: str):
+    if url.startswith("https://cdn.discordapp.com/avatars/"):
+        return True
