@@ -1,10 +1,14 @@
 from PIL import Image
 from io import BytesIO
+from werkzeug.middleware.proxy_fix import ProxyFix
 from flask import Flask, request, send_file
 from utils import get_image, mask, valid_avatar_url
 
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+)
 invalid_url = {"message": "The avatar must start with https://cdn.discordapp.com/avatars/"}, 400
 
 @app.route("/")
