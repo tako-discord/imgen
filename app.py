@@ -20,7 +20,7 @@ def uptime():
 def jail():
     avatar = request.args.get("avatar")
 
-    if valid_avatar_url(avatar):
+    if not valid_avatar_url(avatar):
         return invalid_url
 
     avatar = get_image(avatar).convert("L")
@@ -39,7 +39,7 @@ def pride():
     type = request.args.get("type", "lgbtq")
     avatar = request.args.get("avatar")
 
-    if valid_avatar_url(avatar):
+    if not valid_avatar_url(avatar):
         return invalid_url
     bg = Image.open("assets/pride/" + type + ".png").convert("RGBA")
     avatar = get_image(avatar, (400, 400))
