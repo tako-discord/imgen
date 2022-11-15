@@ -16,5 +16,5 @@ def mask(img: Image, mask: str):
     return output.convert("RGBA")
 
 def valid_avatar_url(url: str):
-    if url.startswith("https://cdn.discordapp.com/avatars/"):
+    if url.startswith("https://cdn.discordapp.com/"):
         return True

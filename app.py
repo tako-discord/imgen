@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.wsgi_app = ProxyFix(
     app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
 )
-invalid_url = {"message": "The avatar must start with https://cdn.discordapp.com/avatars/"}, 400
+invalid_url = {"message": "The avatar must start with https://cdn.discordapp.com/"}, 400
 
 @app.route("/")
 def index():
