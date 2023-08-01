@@ -6,10 +6,9 @@ from utils import get_image, mask, valid_avatar_url
 
 
 app = Flask(__name__)
-app.wsgi_app = ProxyFix(
-    app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
-)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 invalid_url = {"message": "The avatar must start with https://cdn.discordapp.com/"}, 400
+
 
 @app.route("/")
 def index():
@@ -19,6 +18,7 @@ def index():
 @app.route("/uptime")
 def uptime():
     return {"message": "IMGEN is up & running!"}, 200
+
 
 @app.route("/jail")
 def jail():
@@ -55,6 +55,25 @@ def pride():
     bg.save(bytes, format="png")
     bytes.seek(0)
     return send_file(bytes, mimetype="image/png")
+
+
+@app.route("/invite")
+def invite():
+    avatar = request.args.get("avatar")
+
+    if not valid_avatar_url(avatar):
+        return invalid_url
+    bg = Image.open("assets/invite/invite.png").convert("RGBA")
+    avatar = get_image(avatar, (64, 64))
+
+    avatar = mask(avatar, "invite")
+    bg.paste(avatar, (169, 207), avatar)
+
+    bytes = BytesIO()
+    bg.save(bytes, format="png")
+    bytes.seek(0)
+    return send_file(bytes, mimetype="image/gif")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
